@@ -6,15 +6,24 @@ provider "aws" {
   skip_metadata_api_check     = true
   skip_credentials_validation = true
   endpoints {
-    ec2 = "http://ip10-0-2-6-cvh9tgab9qb14bivkplg-4566.direct.lab-boris.fr"
+    ec2 = "http://ip10-0-1-11-cvh6b3qb9qb14bivkpfg-4566.direct.lab-boris.fr"
   }
 }
 
-variable "ami_id" {
-  type = string
+resource "random_id" "ami_simulation" {
+  byte_length = 2
 }
 
 resource "aws_instance" "demo" {
-  ami           = var.ami_id
+  ami           = "ami-${random_id.ami_simulation.hex}"
   instance_type = "t2.micro"
+
+  tags = {
+    Name = "demo"
+    ImageID = "ami-${random_id.ami_simulation.hex}"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
