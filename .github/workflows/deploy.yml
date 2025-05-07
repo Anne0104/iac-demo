@@ -1,0 +1,31 @@
+name: Deploy to LocalStack
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🧰 Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.6.6
+
+      - name: 📦 Install dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y unzip curl
+
+      - name: ⚙️ Init Terraform
+        run: terraform init
+
+      - name: 🚀 Apply Terraform with random AMI
+        run: |
+          RANDOM_AMI="ami-$(openssl rand -hex 4)"
+          terraform apply -auto-approve -var="ami_id=$RANDOM_AMI"
