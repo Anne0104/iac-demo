@@ -2,12 +2,19 @@ provider "aws" {
   region                      = "us-east-1"
   access_key                  = "test"
   secret_key                  = "test"
-  skip_credentials_validation = true
-  skip_metadata_api_check     = true
   skip_requesting_account_id  = true
+  skip_metadata_api_check     = true
+  skip_credentials_validation = true
   endpoints {
-    ec2 = "http:ip10-0-4-7-d0dgq9g05akh4glkf8p0-8080.direct.lab-boris.fr/"
-    iam = "http://ip10-0-4-7-d0dgq9g05akh4glkf8p0-8080.direct.lab-boris.fr/"
-    sts = "http://ip10-0-4-7-d0dgq9g05akh4glkf8p0-8080.direct.lab-boris.fr/"
+    ec2 = "http://ip10-0-2-6-cvh9tgab9qb14bivkplg-4566.direct.lab-boris.fr"
   }
+}
+
+variable "ami_id" {
+  type = string
+}
+
+resource "aws_instance" "demo" {
+  ami           = var.ami_id
+  instance_type = "t2.micro"
 }
